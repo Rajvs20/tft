@@ -53,7 +53,7 @@ def main(expt_name,
          model_folder,
          data_csv_path,
          data_formatter,
-         use_testing_mode=False):
+         use_testing_mode=True):
     """Trains tft based on defined model params.
 
     Args:
@@ -97,7 +97,7 @@ def main(expt_name,
 
     # Parameter overrides for testing only! Small sizes used to speed up script.
     if use_testing_mode:
-        fixed_params["num_epochs"] = 10
+        fixed_params["num_epochs"] = 1
         params["hidden_layer_size"] = 5
         train_samples, valid_samples = 100, 10
 
