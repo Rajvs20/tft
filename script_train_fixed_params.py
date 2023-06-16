@@ -97,9 +97,9 @@ def main(expt_name,
 
     # Parameter overrides for testing only! Small sizes used to speed up script.
     if use_testing_mode:
-        fixed_params["num_epochs"] = 1
+        fixed_params["num_epochs"] = 5
         params["hidden_layer_size"] = 5
-        train_samples, valid_samples = 100, 10
+        train_samples, valid_samples = 1000, 100
 
     # Sets up hyperparam manager
     print("*** Loading hyperparm manager ***")
