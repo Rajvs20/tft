@@ -97,7 +97,7 @@ def main(expt_name,
 
     # Parameter overrides for testing only! Small sizes used to speed up script.
     if use_testing_mode:
-        fixed_params["num_epochs"] = 5
+        fixed_params["num_epochs"] = 10
         params["hidden_layer_size"] = 100
         train_samples, valid_samples = 100000, 10000
 
