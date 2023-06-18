@@ -157,6 +157,26 @@ def main(expt_name,
         p90_forecast = data_formatter.format_predictions(output_map["p90"])
         print("Targets:")
         print(targets)
+        import matplotlib.pyplot as plt
+
+        # Select the forecast time and identifier
+        forecast_time = '2016-01-06'
+        identifier = '10_1001305'
+        
+        # Filter the DataFrame based on forecast_time and identifier
+        selected_row = targets[(targets['forecast_time'] == forecast_time) & (targets['identifier'] == identifier)]
+        
+        # Extract the time steps and values
+        time_steps = ['t+{}'.format(i) for i in range(30)]
+        values = selected_row[time_steps].values.flatten()
+        
+        # Plot the time series
+        plt.plot(range(len(time_steps)), values)
+        plt.xlabel('Time Step')
+        plt.ylabel('Value')
+        plt.title('Time Series Data for forecast_time={} and identifier={}'.format(forecast_time, identifier))
+        plt.show()
+
         def extract_numerical_data(data):
             """Strips out forecast time and identifier columns."""
             return data[[
