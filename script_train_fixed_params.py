@@ -171,6 +171,14 @@ def main(expt_name,
             0.9)
 
         tf.keras.backend.set_session(default_keras_session)
+        # Save targets as a CSV file
+        targets.to_csv('/kaggle/working/targets.csv', index=False)
+    
+        # Save p50_forecast as a CSV file
+        p50_forecast.to_csv('/kaggle/working/p50_forecast.csv', index=False)
+    
+        # Save p90_forecast as a CSV file
+        p90_forecast.to_csv('/kaggle/working/p90_forecast.csv', index=False)
 
     print("Training completed @ {}".format(dte.datetime.now()))
     print("Best validation loss = {}".format(val_loss))
