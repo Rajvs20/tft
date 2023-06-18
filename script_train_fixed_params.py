@@ -32,7 +32,7 @@ Command line args:
 import argparse
 import datetime as dte
 import os
-
+import matplotlib.pyplot as plt
 import data_formatters.base
 import expt_settings.configs
 import libs.hyperparam_opt
@@ -157,26 +157,19 @@ def main(expt_name,
         p90_forecast = data_formatter.format_predictions(output_map["p90"])
         print("Targets:")
         print(targets)
-        import matplotlib.pyplot as plt
+        first_row = targets.iloc[0]
 
-        # Select the forecast time and identifier
-        forecast_time = '2016-01-06'
-        identifier = '10_1001305'
+        # Extract the forecast times and target values
+        forecast_times = pd.to_datetime(first_row[2:].index)
+        target_values = first_row[2:].values
         
-        # Filter the DataFrame based on forecast_time and identifier
-        selected_row = targets[(targets['forecast_time'] == forecast_time) & (targets['identifier'] == identifier)]
-        
-        # Extract the time steps and values
-        time_steps = ['t+{}'.format(i) for i in range(30)]
-        values = selected_row[time_steps].values.flatten()
-        
-        # Plot the time series
-        plt.plot(range(len(time_steps)), values)
-        plt.xlabel('Time Step')
-        plt.ylabel('Value')
-        plt.title('Time Series Data for forecast_time={} and identifier={}'.format(forecast_time, identifier))
+        # Plotting the first row of targets
+        plt.plot(forecast_times, target_values)
+        plt.xlabel('Forecast Time')
+        plt.ylabel('Target Values')
+        plt.title('First Row of Targets')
+        plt.xticks(rotation=45)
         plt.show()
-
         def extract_numerical_data(data):
             """Strips out forecast time and identifier columns."""
             return data[[
