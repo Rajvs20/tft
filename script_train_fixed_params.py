@@ -32,7 +32,7 @@ Command line args:
 import argparse
 import datetime as dte
 import os
-
+import matplotlib.pyplot as plt
 import data_formatters.base
 import expt_settings.configs
 import libs.hyperparam_opt
@@ -138,39 +138,57 @@ def main(expt_name,
 
             tf.keras.backend.set_session(default_keras_session)
 
+
+
     print("*** Running tests ***")
     tf.reset_default_graph()
     with tf.Graph().as_default(), tf.Session(config=tf_config) as sess:
         tf.keras.backend.set_session(sess)
         best_params = opt_manager.get_best_params()
         model = ModelClass(best_params, use_cudnn=use_gpu)
-
+    
         model.load(opt_manager.hyperparam_folder)
-
+    
         print("Computing best validation loss")
         val_loss = model.evaluate(valid)
-
+    
         print("Computing test loss")
         output_map = model.predict(test, return_targets=True)
         targets = data_formatter.format_predictions(output_map["targets"])
         p50_forecast = data_formatter.format_predictions(output_map["p50"])
         p90_forecast = data_formatter.format_predictions(output_map["p90"])
-
+    
         def extract_numerical_data(data):
             """Strips out forecast time and identifier columns."""
             return data[[
                 col for col in data.columns
                 if col not in {"forecast_time", "identifier"}
             ]]
-
+    
         p50_loss = utils.numpy_normalised_quantile_loss(
             extract_numerical_data(targets), extract_numerical_data(p50_forecast),
             0.5)
         p90_loss = utils.numpy_normalised_quantile_loss(
             extract_numerical_data(targets), extract_numerical_data(p90_forecast),
             0.9)
-
+    
+        # Plotting the actual data, p50 forecast, and p90 forecast
+        plt.figure(figsize=(10, 6))
+        plt.plot(targets, label='Actual Data', color='blue')
+        plt.plot(p50_forecast, label='p50 Forecast', color='red')
+        plt.plot(p90_forecast, label='p90 Forecast', color='orange')
+    
+        # Customize the plot
+        plt.title('TFT Model Predictions')
+        plt.xlabel('Time')
+        plt.ylabel('Value')
+        plt.legend()
+    
+        # Display the plot
+        plt.show()
+    
         tf.keras.backend.set_session(default_keras_session)
+
 
     print("Training completed @ {}".format(dte.datetime.now()))
     print("Best validation loss = {}".format(val_loss))
