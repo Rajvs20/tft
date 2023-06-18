@@ -32,7 +32,7 @@ Command line args:
 import argparse
 import datetime as dte
 import os
-import matplotlib.pyplot as plt
+
 import data_formatters.base
 import expt_settings.configs
 import libs.hyperparam_opt
@@ -155,21 +155,7 @@ def main(expt_name,
         targets = data_formatter.format_predictions(output_map["targets"])
         p50_forecast = data_formatter.format_predictions(output_map["p50"])
         p90_forecast = data_formatter.format_predictions(output_map["p90"])
-        print("Targets:")
-        print(targets)
-        first_row = targets.iloc[0]
 
-        # Extract the forecast times and target values
-        forecast_times = pd.to_datetime(first_row[2:].index)
-        target_values = first_row[2:].values
-        
-        # Plotting the first row of targets
-        plt.plot(forecast_times, target_values)
-        plt.xlabel('Forecast Time')
-        plt.ylabel('Target Values')
-        plt.title('First Row of Targets')
-        plt.xticks(rotation=45)
-        plt.show()
         def extract_numerical_data(data):
             """Strips out forecast time and identifier columns."""
             return data[[
